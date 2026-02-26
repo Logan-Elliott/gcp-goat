@@ -3,12 +3,12 @@ import json
 import argparse
 import base64
 import logging
+import os  # <-- Add this import
 from email.message import EmailMessage
 
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 import google.auth.transport.requests
-
 from google.auth.exceptions import RefreshError
 from googleapiclient.errors import HttpError
 
@@ -19,7 +19,11 @@ logging.basicConfig(
     format='%(asctime)s - ERROR - %(message)s'
 )
 
-DB_FILE = 'oauth_tokens.db'
+# --- Database Setup (Azure Aware) ---
+if 'WEBSITE_SITE_NAME' in os.environ:
+    DB_FILE = '/home/oauth_tokens.db'
+else:
+    DB_FILE = 'oauth_tokens.db'
 
 class GmailManager:
     def __init__(self, target_email):
