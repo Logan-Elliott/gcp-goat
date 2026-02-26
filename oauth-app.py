@@ -31,7 +31,8 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 # ------------------------------------
 
 # --- Database Setup ---
-DB_FILE = 'oauth_tokens.db'
+# Using the /home directory ensures the DB survives container restarts in Azure
+DB_FILE = '/home/oauth_tokens.db'
 
 def init_db():
     """Initialize the SQLite database and create the tokens table."""
