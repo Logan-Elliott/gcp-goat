@@ -12,6 +12,8 @@ It combines a small OAuth callback service with an operator CLI. A user complete
 
 > Use this project only against accounts and environments covered by written authorization and rules of engagement.
 
+![GCP-GOAT authorization handoff](docs/assets/authorization-page.png)
+
 ## Highlights
 
 - Real Google OAuth web-server flow with state validation and offline access
@@ -172,6 +174,19 @@ The first command previews the operation. The second copies valid rows into encr
 ## Deployment
 
 The included [Dockerfile](Dockerfile) runs the callback service as a non-root user with a persistent `/data` volume. Supply secrets at runtime; never bake them into an image.
+
+```bash
+docker build -t gcp-goat:1.0.0 .
+mkdir -p data
+docker run --rm --name gcp-goat \
+  --publish 8000:8000 \
+  --env-file .env \
+  --env GMAIL_OAUTH_DB_PATH=/data/oauth_tokens.db \
+  --volume "$(pwd)/data:/data" \
+  gcp-goat:1.0.0
+```
+
+The redirect URI in `.env` must exactly match the URI configured in Google Cloud. Place HTTPS in front of the container for any deployment beyond local testing.
 
 Azure App Service deployments should mount persistent storage, set `GMAIL_OAUTH_DB_PATH=/home/data/oauth_tokens.db`, enable `GMAIL_OAUTH_TRUST_PROXY=true`, and use the Gunicorn command shown above. Keep a single web worker when using SQLite.
 
