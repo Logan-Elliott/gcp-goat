@@ -1,1 +1,21 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Runtime data and secrets
+*.db
+*.db-shm
+*.db-wal
+*.log
+data/
+
+# Local source material
 oauth-gmail-tool-handoff.md
