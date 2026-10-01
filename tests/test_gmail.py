@@ -17,8 +17,12 @@ class FakeRequest:
 
 class FakeMessages:
     def list(self, **kwargs):
-        assert kwargs["labelIds"] == ["INBOX"]
         assert kwargs["maxResults"] == 100
+        if "q" in kwargs:
+            assert kwargs["q"] == "from:security@example.com newer_than:7d"
+            assert "labelIds" not in kwargs
+        else:
+            assert kwargs["labelIds"] == ["INBOX"]
         return FakeRequest({"messages": [{"id": "message-1"}]})
 
     def get(self, **kwargs):
@@ -101,6 +105,22 @@ def test_list_messages_clamps_request_size_and_returns_metadata(tmp_path):
         "get_message_metadata",
         "list_messages",
     ]
+
+
+def test_list_messages_searches_all_mail_with_gmail_query(tmp_path):
+    operator, store = make_operator(tmp_path)
+    messages = operator.list_messages(
+        1000,
+        query="from:security@example.com newer_than:7d",
+    )
+
+    assert messages[0].message_id == "message-1"
+    list_event = store.list_audit_events()[-1]
+    assert list_event["action"] == "list_messages"
+    assert list_event["details"] == {
+        "max_results": 100,
+        "query": "from:security@example.com newer_than:7d",
+    }
 
 
 def test_send_records_metadata_but_not_message_body(tmp_path):

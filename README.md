@@ -108,6 +108,7 @@ gcp-goat accounts
 # Read-only operations
 gcp-goat profile --email user@example.com
 gcp-goat list --email user@example.com --max 5
+gcp-goat list --email user@example.com --query 'from:security@example.com newer_than:7d'
 gcp-goat read --email user@example.com MESSAGE_ID
 gcp-goat list-filters --email user@example.com
 
@@ -132,7 +133,7 @@ gcp-goat revoke --email user@example.com
 | `doctor` | Validate database permissions and configuration | No |
 | `accounts` | List account metadata without tokens | No |
 | `profile` | Verify access and show mailbox-wide totals | No |
-| `list` / `read` | Retrieve message metadata or content | No |
+| `list` / `read` | List inbox metadata, search with Gmail syntax, or retrieve content | No |
 | `send` | Send a plain-text email | Yes; use `--dry-run` to preview |
 | `trash` | Move a message to Trash | Yes; use `--dry-run` to preview |
 | `list-filters` | Inspect filters | No |

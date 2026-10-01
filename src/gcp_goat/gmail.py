@@ -154,14 +154,27 @@ class GmailOperator:
             "profile",
         )
 
-    def list_messages(self, max_results: int = 10) -> list[MessageSummary]:
+    def list_messages(
+        self,
+        max_results: int = 10,
+        *,
+        query: str | None = None,
+    ) -> list[MessageSummary]:
         max_results = max(1, min(max_results, 100))
+        request_args: dict[str, Any] = {
+            "userId": "me",
+            "maxResults": max_results,
+        }
+        details: dict[str, Any] = {"max_results": max_results}
+        if query:
+            request_args["q"] = query
+            details["query"] = query
+        else:
+            request_args["labelIds"] = ["INBOX"]
         response = self._execute(
-            self.service.users()
-            .messages()
-            .list(userId="me", labelIds=["INBOX"], maxResults=max_results),
+            self.service.users().messages().list(**request_args),
             "list_messages",
-            details={"max_results": max_results},
+            details=details,
         )
         summaries: list[MessageSummary] = []
         for item in response.get("messages", []):

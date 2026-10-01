@@ -48,9 +48,13 @@ def build_parser() -> argparse.ArgumentParser:
     profile = subparsers.add_parser("profile", help="Verify access and show mailbox totals")
     _add_email(profile)
 
-    listing = subparsers.add_parser("list", help="List recent inbox message metadata")
+    listing = subparsers.add_parser("list", help="List or search message metadata")
     _add_email(listing)
     listing.add_argument("--max", type=int, default=10, dest="max_results")
+    listing.add_argument(
+        "--query",
+        help="Search all mail using Gmail syntax; without this option, list the inbox",
+    )
     listing.add_argument("--json", action="store_true", help="Emit JSON")
 
     read = subparsers.add_parser("read", help="Read a message without changing read state")
@@ -276,7 +280,7 @@ def _run(args: argparse.Namespace) -> int:
             }
         )
     elif args.command == "list":
-        messages = operator.list_messages(args.max_results)
+        messages = operator.list_messages(args.max_results, query=args.query)
         if args.json:
             print_json([message.__dict__ for message in messages])
         else:

@@ -15,7 +15,7 @@
 2. Start the callback service and verify `/healthz` through the deployed ingress.
 3. Have the in-scope user open the authorization endpoint and review Google's consent screen.
 4. Confirm capture with `gcp-goat accounts` and `gcp-goat profile --email TARGET`.
-5. Begin with `list` and `read` to validate telemetry without modifying message labels.
+5. Begin with `list` and `read` to validate telemetry without modifying message labels. Use `list --query` with Gmail search syntax when the exercise calls for targeted discovery.
 6. Run approved actions within the rules of engagement. Add `--dry-run` when a local preview is useful for command preparation.
 7. Export the local audit trail and correlate timestamps with Google Workspace and network telemetry.
 8. Revoke the grant, remove deployment secrets, and retain only the evidence allowed by the engagement data-handling plan.
