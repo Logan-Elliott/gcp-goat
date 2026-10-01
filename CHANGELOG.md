@@ -6,7 +6,7 @@ All notable changes to this project are documented here.
 
 ### Added
 
-- Installable `gmail-oauth-server` and `gmail-ops` commands
+- Installable `gcp-goat-server` and `gcp-goat` commands
 - Encrypted SQLite credential storage and legacy database migration
 - Persisted token expiry and refreshed-token updates
 - Operator audit events without token or message-body logging
