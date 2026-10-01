@@ -1,0 +1,11 @@
+.git
+.github
+.venv
+__pycache__
+*.pyc
+*.db
+*.log
+.env
+tests
+docs
+oauth-gmail-tool-handoff.md
