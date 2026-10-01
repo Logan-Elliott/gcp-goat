@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import logging
 import os
 from typing import Any
@@ -279,12 +280,35 @@ def create_app(
     return app
 
 
-def main() -> None:
+def build_server_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="gcp-goat-server",
+        description="Run the GCP-GOAT OAuth callback service for local testing.",
+    )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    parser.add_argument(
+        "--host",
+        default=os.environ.get("HOST", "0.0.0.0"),
+        help="Listening host (default: HOST or 0.0.0.0)",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        help="Listening port (default: PORT or 8000)",
+    )
+    return parser
+
+
+def main(argv: list[str] | None = None) -> None:
+    args = build_server_parser().parse_args(argv)
     logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"))
     try:
         app = create_app()
     except ConfigurationError as exc:
         raise SystemExit(f"Configuration error: {exc}") from exc
-    port = int(os.environ.get("PORT", "8000"))
+    try:
+        port = args.port if args.port is not None else int(os.environ.get("PORT", "8000"))
+    except ValueError as exc:
+        raise SystemExit("Configuration error: PORT must be an integer") from exc
     # The development entry point must accept platform ingress; production uses Gunicorn.
-    app.run(host="0.0.0.0", port=port, debug=False)  # nosec B104
+    app.run(host=args.host, port=port, debug=False)  # nosec B104

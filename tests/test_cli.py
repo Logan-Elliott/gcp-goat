@@ -27,6 +27,11 @@ def test_keygen_does_not_require_existing_configuration(capsys):
     assert re.fullmatch(r"[A-Za-z0-9_-]{43}=", lines[0].split("=", 1)[1])
 
 
+def test_version_does_not_require_configuration(capsys):
+    assert invoke(["--version"]) == 0
+    assert capsys.readouterr().out.strip() == "gcp-goat 1.0.0"
+
+
 def test_accounts_and_doctor_on_new_encrypted_store(monkeypatch, tmp_path, capsys):
     configure_store(monkeypatch, tmp_path)
     assert invoke(["accounts"]) == 0

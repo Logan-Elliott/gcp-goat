@@ -12,6 +12,7 @@ from typing import Any
 
 import requests
 
+from . import __version__
 from .config import ConfigurationError, StoreSettings
 from .crypto import SecretBox
 from .gmail import AccountNotFoundError, GmailOperator, OperatorError
@@ -38,6 +39,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="gcp-goat",
         description="Operate authorized Gmail OAuth grants during a security assessment.",
     )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--db", type=Path, help="Override GMAIL_OAUTH_DB_PATH")
     subparsers = parser.add_subparsers(dest="command", required=True)
 

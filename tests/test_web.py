@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from gcp_goat.config import WebSettings
 from gcp_goat.crypto import SecretBox
 from gcp_goat.store import CredentialStore
-from gcp_goat.web import create_app
+from gcp_goat.web import create_app, main
 
 
 def settings(tmp_path: Path) -> WebSettings:
@@ -54,3 +56,15 @@ def test_callback_rejects_missing_state_and_writes_audit_event(tmp_path):
     event = store.list_audit_events()[0]
     assert event["action"] == "oauth_callback"
     assert event["details"] == {"reason": "state_mismatch"}
+
+
+def test_server_help_and_version_do_not_require_configuration(capsys):
+    with pytest.raises(SystemExit) as help_exit:
+        main(["--help"])
+    assert help_exit.value.code == 0
+    assert "OAuth callback service" in capsys.readouterr().out
+
+    with pytest.raises(SystemExit) as version_exit:
+        main(["--version"])
+    assert version_exit.value.code == 0
+    assert capsys.readouterr().out.strip() == "gcp-goat-server 1.0.0"

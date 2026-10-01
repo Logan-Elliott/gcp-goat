@@ -7,6 +7,8 @@ All notable changes to this project are documented here.
 ### Added
 
 - Installable `gcp-goat-server` and `gcp-goat` commands
+- Version output and configuration-independent server help
+- Gmail message search with native Gmail query syntax
 - Encrypted SQLite credential storage and legacy database migration
 - Persisted token expiry and refreshed-token updates
 - Operator audit events without token or message-body logging
