@@ -33,6 +33,8 @@ def test_index_health_and_removed_secret_routes(tmp_path):
     index = client.get("/")
     assert index.status_code == 200
     assert b"Authorized Assessment" in index.data
+    assert b"accounts.google.com" in index.data
+    assert b"never asks for or receives your Google password" in index.data
     assert client.get("/healthz").json["status"] == "ok"
     assert client.get("/view_db").status_code == 404
     assert client.get("/manage/user@example.com").status_code == 404
