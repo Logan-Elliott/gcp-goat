@@ -16,4 +16,4 @@ Please do not open a public issue for a vulnerability that could expose OAuth cr
 - Put the callback service behind HTTPS and restrict administrative access to the host.
 - Use a dedicated Google Cloud project and OAuth client for each engagement.
 - Prefer the `readonly` scope profile when mailbox changes are outside the rules of engagement.
-- Run `gmail-ops revoke --email TARGET --execute` during cleanup and retain the audit export with engagement evidence.
+- Run `gmail-ops revoke --email TARGET` during cleanup and retain the audit export with engagement evidence.

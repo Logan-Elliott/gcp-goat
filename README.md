@@ -6,7 +6,7 @@
 
 Gmail OAuth Operator is an authorized red and purple team assessment toolkit for exercising OAuth consent, delegated Gmail access, token persistence, mailbox activity, detection, and cleanup.
 
-It combines a small OAuth callback service with an operator CLI. A user completes Google's real consent flow, the service encrypts the resulting credentials in SQLite, and an authorized operator can perform scoped Gmail API actions from the assessment host. Mutating commands show a dry-run preview unless `--execute` is supplied.
+It combines a small OAuth callback service with an operator CLI. A user completes Google's real consent flow, the service encrypts the resulting credentials in SQLite, and an authorized operator can perform scoped Gmail API actions from the assessment host. Actions execute normally; add `--dry-run` when you want a local preview first.
 
 > Use this project only against accounts and environments covered by written authorization and rules of engagement.
 
@@ -17,6 +17,7 @@ It combines a small OAuth callback service with an operator CLI. A user complete
 - Reliable token-expiry persistence and refresh handling
 - Inbox metadata listing and message retrieval without changing read state
 - Controlled message sending, trashing, and Gmail filter management
+- Optional local-only dry-run previews for mailbox and credential actions
 - Local JSON audit trail that excludes tokens and message contents
 - Grant revocation and credential cleanup workflow
 - Read-only and operator scope profiles
@@ -108,15 +109,17 @@ gmail-ops list --email user@example.com --max 5
 gmail-ops read --email user@example.com MESSAGE_ID
 gmail-ops list-filters --email user@example.com
 
-# Preview a mailbox change, then explicitly execute it
+# Send a message normally
 gmail-ops send --email user@example.com \
   --to recipient@example.com --subject 'Authorized test' --body 'Test message'
+
+# Preview the same action without changing Gmail
 gmail-ops send --email user@example.com \
-  --to recipient@example.com --subject 'Authorized test' --body 'Test message' --execute
+  --to recipient@example.com --subject 'Authorized test' --body 'Test message' --dry-run
 
 # Export evidence and revoke access during cleanup
 gmail-ops audit --limit 500 > operator-audit.json
-gmail-ops revoke --email user@example.com --execute
+gmail-ops revoke --email user@example.com
 ```
 
 ## Command reference
@@ -128,14 +131,14 @@ gmail-ops revoke --email user@example.com --execute
 | `accounts` | List account metadata without tokens | No |
 | `profile` | Verify access and show mailbox-wide totals | No |
 | `list` / `read` | Retrieve message metadata or content | No |
-| `send` | Send a plain-text email | Yes; requires `--execute` |
-| `trash` | Move a message to Trash | Yes; requires `--execute` |
+| `send` | Send a plain-text email | Yes; use `--dry-run` to preview |
+| `trash` | Move a message to Trash | Yes; use `--dry-run` to preview |
 | `list-filters` | Inspect filters | No |
-| `create-filter` / `delete-filter` | Change filter configuration | Yes; requires `--execute` |
+| `create-filter` / `delete-filter` | Change filter configuration | Yes; use `--dry-run` to preview |
 | `audit` | Export the local operation trail | No |
-| `revoke` | Revoke the Google grant and remove local credentials | Yes; requires `--execute` |
-| `remove-local` | Remove only the encrypted local credential | Yes; requires `--execute` |
-| `migrate-legacy` | Encrypt the original database and remove its plaintext table | Local change; requires `--execute` |
+| `revoke` | Revoke the Google grant and remove local credentials | Yes; use `--dry-run` to preview |
+| `remove-local` | Remove only the encrypted local credential | Yes; use `--dry-run` to preview |
+| `migrate-legacy` | Encrypt the original database and remove its plaintext table | Local change; use `--dry-run` to preview |
 
 Use `gmail-ops COMMAND --help` for all arguments. JSON output is available on commands intended for downstream processing.
 
@@ -157,8 +160,8 @@ Changing a profile requires a new consent flow so Google can issue a grant for t
 Versions before 1.0 stored tokens in a plaintext `user_tokens` table. Point this release at the existing database, configure an encryption key, and run:
 
 ```bash
+gmail-ops migrate-legacy --dry-run
 gmail-ops migrate-legacy
-gmail-ops migrate-legacy --execute
 ```
 
 The first command previews the operation. The second copies valid rows into encrypted v2 storage and drops the plaintext table. Back up engagement evidence before migration.

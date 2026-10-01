@@ -10,7 +10,7 @@ All notable changes to this project are documented here.
 - Encrypted SQLite credential storage and legacy database migration
 - Persisted token expiry and refreshed-token updates
 - Operator audit events without token or message-body logging
-- Explicit execution gates for mailbox-changing commands
+- Optional local-only dry-run previews for mailbox and credential actions
 - Grant revocation and cleanup commands
 - Read-only and operator OAuth scope profiles
 - Container deployment, health check, automated tests, linting, and CI

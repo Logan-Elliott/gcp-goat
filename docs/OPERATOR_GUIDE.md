@@ -16,15 +16,15 @@
 3. Have the in-scope user open the authorization endpoint and review Google's consent screen.
 4. Confirm capture with `gmail-ops accounts` and `gmail-ops profile --email TARGET`.
 5. Begin with `list` and `read` to validate telemetry without modifying message labels.
-6. Preview each approved mutation without `--execute`, record the preview, then repeat with `--execute`.
+6. Run approved actions within the rules of engagement. Add `--dry-run` when a local preview is useful for command preparation.
 7. Export the local audit trail and correlate timestamps with Google Workspace and network telemetry.
 8. Revoke the grant, remove deployment secrets, and retain only the evidence allowed by the engagement data-handling plan.
 
 ## Operational notes
 
-### Mutation controls
+### Actions
 
-`send`, `trash`, `create-filter`, `delete-filter`, `revoke`, `remove-local`, and `migrate-legacy` are dry-run operations until `--execute` is supplied. This guard helps prevent accidental mailbox changes during discovery and command preparation.
+`send`, `trash`, `create-filter`, `delete-filter`, `revoke`, `remove-local`, and `migrate-legacy` execute normally. Add `--dry-run` to print the planned action without changing Gmail or stored credentials. Dry runs are local-only and do not initialize a Gmail API client.
 
 ### Message retrieval
 
@@ -48,8 +48,8 @@ Export the audit record before revocation:
 
 ```bash
 gmail-ops audit --limit 5000 > engagement-oauth-audit.json
+gmail-ops revoke --email user@example.com --dry-run
 gmail-ops revoke --email user@example.com
-gmail-ops revoke --email user@example.com --execute
 ```
 
 Verify the application is absent from the account's third-party access page and from the CLI's `accounts` output. Remove the callback service, OAuth client secret, encryption key, database, platform logs, and exported message data according to the rules of engagement and evidence-retention plan.
