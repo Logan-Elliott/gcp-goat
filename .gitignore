@@ -16,6 +16,3 @@ dist/
 *.db-wal
 *.log
 data/
-
-# Local source material
-oauth-gmail-tool-handoff.md
