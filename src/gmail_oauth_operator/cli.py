@@ -18,18 +18,18 @@ from .gmail import AccountNotFoundError, GmailOperator, OperatorError
 from .output import print_json, safe_text
 from .store import CredentialStore
 
-MUTATION_NOTICE = "Dry run only. Re-run with --execute to perform this mailbox change."
+DRY_RUN_NOTICE = "Dry run requested. No mailbox or credential changes were made."
 
 
 def _add_email(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--email", required=True, help="Authorized target mailbox")
 
 
-def _add_execute(parser: argparse.ArgumentParser) -> None:
+def _add_dry_run(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
-        "--execute",
+        "--dry-run",
         action="store_true",
-        help="Acknowledge and perform the mailbox or credential change",
+        help="Preview the action without changing Gmail or stored credentials",
     )
 
 
@@ -65,12 +65,12 @@ def build_parser() -> argparse.ArgumentParser:
     body = send.add_mutually_exclusive_group(required=True)
     body.add_argument("--body", help="Plain-text message body")
     body.add_argument("--body-file", type=Path, help="Read body from a file, or '-' for stdin")
-    _add_execute(send)
+    _add_dry_run(send)
 
     trash = subparsers.add_parser("trash", help="Move a message to Trash")
     _add_email(trash)
     trash.add_argument("message_id")
-    _add_execute(trash)
+    _add_dry_run(trash)
 
     filters = subparsers.add_parser("list-filters", help="List Gmail filters")
     _add_email(filters)
@@ -81,12 +81,12 @@ def build_parser() -> argparse.ArgumentParser:
     create_filter.add_argument("--query", required=True, help="Gmail search expression")
     create_filter.add_argument("--add-labels", help="Comma-separated Gmail label IDs")
     create_filter.add_argument("--remove-labels", help="Comma-separated Gmail label IDs")
-    _add_execute(create_filter)
+    _add_dry_run(create_filter)
 
     delete_filter = subparsers.add_parser("delete-filter", help="Delete a Gmail filter")
     _add_email(delete_filter)
     delete_filter.add_argument("filter_id")
-    _add_execute(delete_filter)
+    _add_dry_run(delete_filter)
 
     audit = subparsers.add_parser("audit", help="Export local operator audit events as JSON")
     audit.add_argument("--limit", type=int, default=100)
@@ -95,18 +95,18 @@ def build_parser() -> argparse.ArgumentParser:
         "revoke", help="Revoke the Google grant and remove local credentials"
     )
     _add_email(revoke)
-    _add_execute(revoke)
+    _add_dry_run(revoke)
 
     remove = subparsers.add_parser(
         "remove-local", help="Remove local credentials without revoking the Google grant"
     )
     _add_email(remove)
-    _add_execute(remove)
+    _add_dry_run(remove)
 
     migrate = subparsers.add_parser(
         "migrate-legacy", help="Encrypt the original user_tokens table and purge plaintext"
     )
-    _add_execute(migrate)
+    _add_dry_run(migrate)
     return parser
 
 
@@ -127,12 +127,12 @@ def _message_body(args: argparse.Namespace) -> str:
     return args.body_file.read_text(encoding="utf-8")
 
 
-def _require_execute(args: argparse.Namespace, preview: dict[str, Any]) -> bool:
-    if args.execute:
-        return True
-    print_json({"execute": False, "preview": preview})
-    print(MUTATION_NOTICE, file=sys.stderr)
-    return False
+def _dry_run_requested(args: argparse.Namespace, preview: dict[str, Any]) -> bool:
+    if not args.dry_run:
+        return False
+    print_json({"dry_run": True, "preview": preview})
+    print(DRY_RUN_NOTICE, file=sys.stderr)
+    return True
 
 
 def _run(args: argparse.Namespace) -> int:
@@ -171,7 +171,7 @@ def _run(args: argparse.Namespace) -> int:
         if not store.legacy_table_exists():
             print("No legacy user_tokens table was found.")
             return 0
-        if not _require_execute(
+        if _dry_run_requested(
             args,
             {"action": "encrypt legacy credentials and drop the plaintext table"},
         ):
@@ -181,7 +181,7 @@ def _run(args: argparse.Namespace) -> int:
         return 0
 
     if args.command == "remove-local":
-        if not _require_execute(args, {"action": "remove local credential", "email": args.email}):
+        if _dry_run_requested(args, {"action": "remove local credential", "email": args.email}):
             return 0
         deleted = store.delete(args.email)
         store.audit(
@@ -196,7 +196,7 @@ def _run(args: argparse.Namespace) -> int:
         record = store.get(args.email)
         if record is None:
             raise AccountNotFoundError(f"No stored OAuth grant for {args.email}")
-        if not _require_execute(
+        if _dry_run_requested(
             args,
             {"action": "revoke Google grant and remove local credential", "email": args.email},
         ):
@@ -230,14 +230,14 @@ def _run(args: argparse.Namespace) -> int:
         print("Google grant revoked and local credential removed.")
         return 0
 
-    # Preview mailbox changes before credentials are loaded or any Google API
-    # client is initialized. This guarantees that dry runs are local-only.
-    if args.command == "send" and not _require_execute(
+    # Handle explicit dry runs before credentials are loaded or any Google API
+    # client is initialized. This guarantees that previews are local-only.
+    if args.command == "send" and _dry_run_requested(
         args,
         {"action": "send message", "from": args.email, "to": args.to},
     ):
         return 0
-    if args.command == "trash" and not _require_execute(
+    if args.command == "trash" and _dry_run_requested(
         args,
         {"action": "move message to Trash", "message_id": args.message_id},
     ):
@@ -247,7 +247,7 @@ def _run(args: argparse.Namespace) -> int:
         remove_labels = _labels(args.remove_labels)
         if not add_labels and not remove_labels:
             raise OperatorError("Specify --add-labels and/or --remove-labels")
-        if not _require_execute(
+        if _dry_run_requested(
             args,
             {
                 "action": "create filter",
@@ -257,7 +257,7 @@ def _run(args: argparse.Namespace) -> int:
             },
         ):
             return 0
-    if args.command == "delete-filter" and not _require_execute(
+    if args.command == "delete-filter" and _dry_run_requested(
         args,
         {"action": "delete filter", "filter_id": args.filter_id},
     ):

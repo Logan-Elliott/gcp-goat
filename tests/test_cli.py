@@ -38,7 +38,7 @@ def test_accounts_and_doctor_on_new_encrypted_store(monkeypatch, tmp_path, capsy
     assert '"status": "ok"' in output
 
 
-def test_mutation_preview_is_local_only_and_needs_no_stored_account(monkeypatch, tmp_path, capsys):
+def test_dry_run_is_local_only_and_needs_no_stored_account(monkeypatch, tmp_path, capsys):
     configure_store(monkeypatch, tmp_path)
     assert (
         invoke(
@@ -52,13 +52,49 @@ def test_mutation_preview_is_local_only_and_needs_no_stored_account(monkeypatch,
                 "Preview",
                 "--body",
                 "No API request",
+                "--dry-run",
             ]
         )
         == 0
     )
     captured = capsys.readouterr()
-    assert '"execute": false' in captured.out
-    assert "Dry run only" in captured.err
+    assert '"dry_run": true' in captured.out
+    assert "Dry run requested" in captured.err
+
+
+def test_action_executes_by_default(monkeypatch, tmp_path, capsys):
+    configure_store(monkeypatch, tmp_path)
+
+    class FakeOperator:
+        def __init__(self, store, email):
+            assert email == "operator@example.com"
+
+        def send_message(self, recipient, subject, body):
+            assert (recipient, subject, body) == (
+                "recipient@example.com",
+                "Execute",
+                "Send normally",
+            )
+            return "sent-1"
+
+    monkeypatch.setattr("gmail_oauth_operator.cli.GmailOperator", FakeOperator)
+    assert (
+        invoke(
+            [
+                "send",
+                "--email",
+                "operator@example.com",
+                "--to",
+                "recipient@example.com",
+                "--subject",
+                "Execute",
+                "--body",
+                "Send normally",
+            ]
+        )
+        == 0
+    )
+    assert "Message sent. ID: sent-1" in capsys.readouterr().out
 
 
 def test_missing_account_returns_actionable_error(monkeypatch, tmp_path, capsys):
