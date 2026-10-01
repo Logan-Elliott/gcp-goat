@@ -29,7 +29,7 @@ Telemetry availability varies by Google Workspace edition, licensing, retention 
 - Application access-control status: trusted, limited, or blocked
 - Gmail message, label, and settings changes around the consent window
 - Password-reset, one-time-code, and security-alert messages accessed during the window
-- Host execution of `gmail-ops`, callback-service access logs, and outbound connections to Google endpoints
+
 - The tool's local audit export, which intentionally records action metadata without tokens or message bodies
 
 ## Containment and validation
