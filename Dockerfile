@@ -6,14 +6,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN addgroup --system operator && adduser --system --ingroup operator operator
+RUN addgroup --system gcpgoat && adduser --system --ingroup gcpgoat gcpgoat
 
 COPY pyproject.toml README.md LICENSE ./
 COPY src ./src
 RUN pip install --no-cache-dir .
 
-RUN mkdir /data && chown operator:operator /data
-USER operator
+RUN mkdir /data && chown gcpgoat:gcpgoat /data
+USER gcpgoat
 
 EXPOSE 8000
 VOLUME ["/data"]
