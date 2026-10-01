@@ -26,22 +26,28 @@ PAGE = """<!doctype html>
   <title>{{ title }}</title>
   <style>
     :root { color-scheme:light; --ink:#172033; --muted:#5d6b82; --blue:#2563eb;
-      --blue-dark:#1d4ed8; --line:#dfe5ef; --soft:#f5f7fb; --success:#14866d; }
+      --blue-dark:#1d4ed8; --line:#dfe5ef; --soft:#f5f7fb; --success:#14866d;
+      --page-start:#eef3fb; --page-middle:#f8fafc; --page-end:#edf4ff; --panel:#fff;
+      --panel-border:rgba(204,214,230,.9); --panel-shadow:rgba(45,64,96,.16);
+      --product-meta:#7a879a; --secure-border:#cfe8df; --secure-bg:#f0faf6;
+      --row-line:#edf0f5; --icon-bg:#edf4ff; --detail:#738096; --trust-ink:#526178;
+      --trust-bg:#f7f9fc; --quiet:#8995a7; --code:#174ea6; --footer-ink:#8a96a8;
+      --footer-bg:#fbfcfe; }
     * { box-sizing: border-box; }
     body { margin:0; min-height:100vh; display:grid; place-items:center; padding:32px 20px;
-      color:var(--ink); background:linear-gradient(145deg,#eef3fb 0%,#f8fafc 52%,#edf4ff 100%);
+      color:var(--ink); background:linear-gradient(145deg,var(--page-start) 0%,var(--page-middle) 52%,var(--page-end) 100%);
       font:16px/1.5 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
-    main { width:min(720px,100%); overflow:hidden; border:1px solid rgba(204,214,230,.9);
-      border-radius:20px; background:#fff; box-shadow:0 28px 80px rgba(45,64,96,.16); }
+    main { width:min(720px,100%); overflow:hidden; border:1px solid var(--panel-border);
+      border-radius:20px; background:var(--panel); box-shadow:0 28px 80px var(--panel-shadow); }
     .product { display:flex; align-items:center; gap:13px; padding:22px 30px;
-      border-bottom:1px solid var(--line); background:#fff; }
+      border-bottom:1px solid var(--line); background:var(--panel); }
     .mark { display:grid; place-items:center; width:42px; height:42px; border-radius:12px;
       color:#fff; background:linear-gradient(145deg,#3271ed,#1f52be); box-shadow:0 7px 18px rgba(37,99,235,.24); }
     .mark svg { width:23px; height:23px; }
     .product-name { display:block; font-size:.94rem; font-weight:750; letter-spacing:-.01em; }
-    .product-meta { display:block; margin-top:1px; color:#7a879a; font-size:.77rem; }
-    .secure { margin-left:auto; padding:5px 9px; border:1px solid #cfe8df; border-radius:999px;
-      color:var(--success); background:#f0faf6; font-size:.72rem; font-weight:700; }
+    .product-meta { display:block; margin-top:1px; color:var(--product-meta); font-size:.77rem; }
+    .secure { margin-left:auto; padding:5px 9px; border:1px solid var(--secure-border); border-radius:999px;
+      color:var(--success); background:var(--secure-bg); font-size:.72rem; font-weight:700; }
     .content { padding:36px 42px 30px; }
     .eyebrow { margin:0 0 8px; color:var(--blue); font-size:.74rem; font-weight:800;
       letter-spacing:.11em; text-transform:uppercase; }
@@ -53,14 +59,14 @@ PAGE = """<!doctype html>
     .permissions h2 { margin:0; padding:14px 18px; border-bottom:1px solid var(--line);
       background:var(--soft); font-size:.8rem; letter-spacing:.04em; text-transform:uppercase; }
     .permissions ul { margin:0; padding:0; list-style:none; }
-    .permissions li { display:flex; gap:13px; padding:14px 18px; border-bottom:1px solid #edf0f5; }
+    .permissions li { display:flex; gap:13px; padding:14px 18px; border-bottom:1px solid var(--row-line); }
     .permissions li:last-child { border-bottom:0; }
     .permission-icon { flex:0 0 auto; display:grid; place-items:center; width:30px; height:30px;
-      border-radius:9px; color:var(--blue); background:#edf4ff; font-size:.9rem; font-weight:800; }
+      border-radius:9px; color:var(--blue); background:var(--icon-bg); font-size:.9rem; font-weight:800; }
     .permission-copy strong { display:block; font-size:.92rem; }
-    .permission-copy span { display:block; margin-top:2px; color:#738096; font-size:.82rem; }
+    .permission-copy span { display:block; margin-top:2px; color:var(--detail); font-size:.82rem; }
     .trust-note { display:flex; align-items:flex-start; gap:10px; margin:0 0 20px; padding:12px 14px;
-      border-radius:11px; color:#526178; background:#f7f9fc; font-size:.83rem; }
+      border-radius:11px; color:var(--trust-ink); background:var(--trust-bg); font-size:.83rem; }
     .trust-note svg { flex:0 0 auto; width:17px; height:17px; margin-top:2px; color:var(--success); }
     .button { display:flex; align-items:center; justify-content:center; gap:11px; width:100%; padding:13px 18px;
       border-radius:10px; color:#fff; background:var(--blue); box-shadow:0 8px 20px rgba(37,99,235,.2);
@@ -68,11 +74,18 @@ PAGE = """<!doctype html>
     .button:hover { background:var(--blue-dark); transform:translateY(-1px); }
     .g-mark { display:grid; place-items:center; width:22px; height:22px; border-radius:50%;
       color:#2563eb; background:#fff; font:800 .88rem/1 Arial,sans-serif; }
-    .destination { margin:10px 0 0; color:#8995a7; font-size:.75rem; text-align:center; }
-    .boundary { margin:20px 0 12px; color:#8995a7; font-size:.77rem; text-align:center; }
-    code { color:#174ea6; } footer { padding:17px 30px; border-top:1px solid var(--line);
-      color:#8a96a8; background:#fbfcfe; font-size:.75rem; text-align:center; }
-    @media (max-width:560px) { body { padding:0; background:#fff; } main { min-height:100vh; border:0; border-radius:0;
+    .destination { margin:10px 0 0; color:var(--quiet); font-size:.75rem; text-align:center; }
+    .boundary { margin:20px 0 12px; color:var(--quiet); font-size:.77rem; text-align:center; }
+    code { color:var(--code); } footer { padding:17px 30px; border-top:1px solid var(--line);
+      color:var(--footer-ink); background:var(--footer-bg); font-size:.75rem; text-align:center; }
+    @media (prefers-color-scheme:dark) { :root { color-scheme:dark; --ink:#f0f4ff; --muted:#aab6cb;
+      --blue:#7da5ff; --blue-dark:#6591f5; --line:#344158; --soft:#1b2537; --success:#5bd2b1;
+      --page-start:#080e19; --page-middle:#0c1422; --page-end:#101b2c; --panel:#111a2a;
+      --panel-border:rgba(101,120,153,.38); --panel-shadow:rgba(0,0,0,.48); --product-meta:#93a1b8;
+      --secure-border:#235d52; --secure-bg:#102e2a; --row-line:#273348; --icon-bg:#1b3158;
+      --detail:#95a4ba; --trust-ink:#aab7cc; --trust-bg:#172235; --quiet:#8f9db1;
+      --code:#9bbcff; --footer-ink:#8997ac; --footer-bg:#0f1725; } }
+    @media (max-width:560px) { body { padding:0; background:var(--panel); } main { min-height:100vh; border:0; border-radius:0;
       box-shadow:none; } .product { padding:18px 22px; } .content { padding:30px 22px 24px; }
       .secure { display:none; } }
   </style>
