@@ -41,6 +41,10 @@ dev = [
   "ruff>=0.6,<1",
 ]
 
+[project.scripts]
+gmail-oauth-server = "gmail_oauth_operator.web:main"
+gmail-ops = "gmail_oauth_operator.cli:main"
+
 [project.urls]
 Repository = "https://github.com/Logan-Elliott/gcp-oauth-app"
 
