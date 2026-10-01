@@ -3,7 +3,7 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "gmail-oauth-operator"
+name = "gcp-goat"
 version = "1.0.0"
 description = "Authorized Gmail OAuth assessment toolkit for red and purple teams"
 readme = "README.md"
@@ -42,14 +42,14 @@ dev = [
 ]
 
 [project.scripts]
-gmail-oauth-server = "gmail_oauth_operator.web:main"
-gmail-ops = "gmail_oauth_operator.cli:main"
+gcp-goat = "gcp_goat.cli:main"
+gcp-goat-server = "gcp_goat.web:main"
 
 [project.urls]
-Repository = "https://github.com/Logan-Elliott/gcp-oauth-app"
+Repository = "https://github.com/Logan-Elliott/gcp-goat"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/gmail_oauth_operator"]
+packages = ["src/gcp_goat"]
 
 [tool.pytest.ini_options]
 addopts = "-q"

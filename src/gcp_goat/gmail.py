@@ -1,4 +1,4 @@
-"""Gmail API operations with refresh persistence and local auditing."""
+"""GCP-GOAT Gmail API operations with refresh persistence and local auditing."""
 
 from __future__ import annotations
 

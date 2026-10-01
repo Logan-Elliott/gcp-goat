@@ -1,4 +1,4 @@
-"""Command-line interface for authorized Gmail operations."""
+"""GCP-GOAT command-line interface for authorized Gmail operations."""
 
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ def _add_dry_run(parser: argparse.ArgumentParser) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="gmail-ops",
+        prog="gcp-goat",
         description="Operate authorized Gmail OAuth grants during a security assessment.",
     )
     parser.add_argument("--db", type=Path, help="Override GMAIL_OAUTH_DB_PATH")

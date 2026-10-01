@@ -1,4 +1,4 @@
-"""Encrypted SQLite credential and audit-event storage."""
+"""Encrypted SQLite credential and audit-event storage for GCP-GOAT."""
 
 from __future__ import annotations
 

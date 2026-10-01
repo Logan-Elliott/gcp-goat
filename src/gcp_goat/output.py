@@ -1,4 +1,4 @@
-"""Terminal-safe output helpers."""
+"""Terminal-safe output helpers for GCP-GOAT."""
 
 from __future__ import annotations
 

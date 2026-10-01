@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
-from gmail_oauth_operator.crypto import SecretBox
-from gmail_oauth_operator.gmail import GmailOperator, _decode_base64url
-from gmail_oauth_operator.store import CredentialStore
+from gcp_goat.crypto import SecretBox
+from gcp_goat.gmail import GmailOperator, _decode_base64url
+from gcp_goat.store import CredentialStore
 
 
 class FakeRequest:

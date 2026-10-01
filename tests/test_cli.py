@@ -5,7 +5,7 @@ import re
 import pytest
 from cryptography.fernet import Fernet
 
-from gmail_oauth_operator.cli import main
+from gcp_goat.cli import main
 
 
 def configure_store(monkeypatch, tmp_path):
@@ -77,7 +77,7 @@ def test_action_executes_by_default(monkeypatch, tmp_path, capsys):
             )
             return "sent-1"
 
-    monkeypatch.setattr("gmail_oauth_operator.cli.GmailOperator", FakeOperator)
+    monkeypatch.setattr("gcp_goat.cli.GmailOperator", FakeOperator)
     assert (
         invoke(
             [

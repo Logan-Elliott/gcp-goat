@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from gmail_oauth_operator.config import WebSettings
-from gmail_oauth_operator.crypto import SecretBox
-from gmail_oauth_operator.store import CredentialStore
-from gmail_oauth_operator.web import create_app
+from gcp_goat.config import WebSettings
+from gcp_goat.crypto import SecretBox
+from gcp_goat.store import CredentialStore
+from gcp_goat.web import create_app
 
 
 def settings(tmp_path: Path) -> WebSettings:
@@ -32,6 +32,8 @@ def test_index_health_and_removed_secret_routes(tmp_path):
 
     index = client.get("/")
     assert index.status_code == 200
+    assert b"GCP-GOAT" in index.data
+    assert b"Gmail OAuth Assessment Toolkit" in index.data
     assert b"Authorized Assessment" in index.data
     assert b"accounts.google.com" in index.data
     assert b"never asks for or receives your Google password" in index.data

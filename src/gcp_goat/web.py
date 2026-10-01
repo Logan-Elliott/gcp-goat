@@ -1,4 +1,4 @@
-"""Flask application for interactive Google OAuth authorization."""
+"""GCP-GOAT Flask application for interactive Google OAuth authorization."""
 
 from __future__ import annotations
 
@@ -93,7 +93,7 @@ PAGE = """<!doctype html>
 <body><main>
   <header class="product">
     <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7.5 12 13l8-5.5"/><rect x="3" y="5" width="18" height="14" rx="3"/></svg></span>
-    <span><span class="product-name">Gmail OAuth Operator</span><span class="product-meta">Secure authorization handoff</span></span>
+    <span><span class="product-name">GCP-GOAT</span><span class="product-meta">Gmail OAuth Assessment Toolkit</span></span>
     <span class="secure">OAuth 2.0</span>
   </header>
   <section class="content">
@@ -102,7 +102,7 @@ PAGE = """<!doctype html>
     {{ content|safe }}
     {% if action_url %}<a class="button" href="{{ action_url }}"><span class="g-mark" aria-hidden="true">G</span><span>Continue to Google</span></a><p class="destination">You will continue securely to accounts.google.com</p>{% endif %}
   </section>
-  <footer>Gmail OAuth Operator v{{ version }} &nbsp;•&nbsp; Authorization is completed by Google</footer>
+  <footer>GCP-GOAT v{{ version }} &nbsp;•&nbsp; Authorization is completed by Google</footer>
 </main></body></html>"""
 
 

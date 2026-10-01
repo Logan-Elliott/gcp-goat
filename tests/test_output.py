@@ -1,4 +1,4 @@
-from gmail_oauth_operator.output import safe_text
+from gcp_goat.output import safe_text
 
 
 def test_safe_text_removes_terminal_escape_sequences():

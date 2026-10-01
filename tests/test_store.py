@@ -5,8 +5,8 @@ import sqlite3
 import stat
 from datetime import datetime, timedelta, timezone
 
-from gmail_oauth_operator.crypto import SecretBox
-from gmail_oauth_operator.store import CredentialStore
+from gcp_goat.crypto import SecretBox
+from gcp_goat.store import CredentialStore
 
 
 def credential_values(refresh_token: str | None = "refresh-token") -> dict:

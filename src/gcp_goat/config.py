@@ -1,4 +1,4 @@
-"""Environment-driven configuration for the web and CLI components."""
+"""Environment-driven configuration for GCP-GOAT components."""
 
 from __future__ import annotations
 

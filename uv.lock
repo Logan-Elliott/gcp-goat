@@ -548,7 +548,7 @@ wheels = [
 ]
 
 [[package]]
-name = "gmail-oauth-operator"
+name = "gcp-goat"
 version = "1.0.0"
 source = { editable = "." }
 dependencies = [

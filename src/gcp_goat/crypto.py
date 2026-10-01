@@ -1,4 +1,4 @@
-"""Small encryption boundary for secrets stored in SQLite."""
+"""GCP-GOAT encryption boundary for secrets stored in SQLite."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ class SecretBox:
         except (TypeError, ValueError) as exc:
             raise ValueError(
                 "GMAIL_OAUTH_ENCRYPTION_KEY must be a URL-safe Fernet key; "
-                "generate one with `gmail-ops keygen`"
+                "generate one with `gcp-goat keygen`"
             ) from exc
 
     @staticmethod
