@@ -177,12 +177,11 @@ The included [Dockerfile](Dockerfile) runs the callback service as a non-root us
 
 ```bash
 docker build -t gcp-goat:1.0.0 .
-mkdir -p data
 docker run --rm --name gcp-goat \
   --publish 8000:8000 \
   --env-file .env \
   --env GMAIL_OAUTH_DB_PATH=/data/oauth_tokens.db \
-  --volume "$(pwd)/data:/data" \
+  --volume gcp-goat-data:/data \
   gcp-goat:1.0.0
 ```
 
