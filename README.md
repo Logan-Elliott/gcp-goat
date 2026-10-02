@@ -6,13 +6,13 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-3776AB.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-2ea44f.svg)](LICENSE)
 
+![GCP-GOAT: Gmail OAuth Assessment Toolkit](docs/assets/gcp-goat-banner.webp)
+
 GCP-GOAT is an authorized red and purple team assessment toolkit for exercising OAuth consent, delegated Gmail access, token persistence, mailbox activity, detection, and cleanup through a Google Cloud project.
 
 It combines a small OAuth callback service with an operator CLI. A user completes Google's real consent flow, the service encrypts the resulting credentials in SQLite, and an authorized operator can perform scoped Gmail API actions from the assessment host. Actions execute normally; add `--dry-run` when you want a local preview first.
 
 > Use this project only against accounts and environments covered by written authorization and rules of engagement.
-
-![GCP-GOAT authorization handoff](docs/assets/authorization-page.png)
 
 ## Highlights
 
