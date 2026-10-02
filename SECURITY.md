@@ -6,10 +6,6 @@ GCP-GOAT is built for authorized security assessments. Operators are responsible
 
 Do not use this project to access accounts or data without the account owner's and system owner's authorization.
 
-## Handling findings
-
-Please do not open a public issue for a vulnerability that could expose OAuth credentials or assessment data. Send a private report to the repository owner with the affected version, reproduction steps, impact, and a suggested remediation when possible.
-
 ## Operational security
 
 - Keep the encryption key outside the repository and separate from the database.
